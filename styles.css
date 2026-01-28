@@ -521,6 +521,11 @@ main {
   color: #d9d9d9;
 }
 
+.feedback-wrapper {
+  display: flex;
+  justify-content: center; /* center the button horizontally */
+}
+
 /* Feedback form styles (used on contact.html) */
 
 .feedback-form {
