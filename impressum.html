@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Impressum – Vocabu</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-legal">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="index.html#top" class="logo">
+          <img
+            src="assets/images/App_Icon.png"
+            alt="Back to Vocabu home"
+            class="logo-image"
+          />
+        </a>
+        <nav class="main-nav" id="main-menu" aria-label="Main navigation">
+          <a href="index.html#top" class="nav-link">Download</a>
+          <a href="index.html#what-is-vocabu" class="nav-link"
+            >What is Vocabu</a
+          >
+          <a href="index.html#feedback" class="nav-link">Feedback</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="legal-main">
+      <div class="container legal-container">
+        <h1>Impressum</h1>
+
+        <p class="legal-hint"></p>
+
+        <section class="legal-section">
+          <h2>Angaben gemäß &sect; 5 TMG</h2>
+          <p>
+            <strong>Lilla Kato</strong><br />
+            An der Löwenbrücke 11,<br />
+            97070<br />
+            Deutschland
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Kontakt</h2>
+          <p>
+            E-Mail:
+            <a href="mailto:vocabubi@gmail.com">vocabubi@gmail.com</a>
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Verantwortlich für den Inhalt nach &sect; 18 Abs. 2 MStV:</h2>
+          <p>Lilla Kato</p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p class="footer-copy">
+          &copy; <span id="year"></span> Vocabu. Alle Rechte vorbehalten.
+        </p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="impressum.html">Impressum</a>
+          <a href="datenschutz.html">Datenschutz</a>
+          <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      // Set current year in footer
+      (function () {
+        var yearSpan = document.getElementById("year");
+        if (yearSpan) {
+          yearSpan.textContent = new Date().getFullYear().toString();
+        }
+      })();
+    </script>
+
+    <script>
+      // Mobile nav toggle (no-op on desktop)
+      (function () {
+        var toggle = document.getElementById("menu-toggle");
+        var menu = document.getElementById("main-menu");
+
+        if (toggle && menu) {
+          toggle.addEventListener("click", function () {
+            var isOpen = menu.classList.toggle("nav-open");
+            toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+          });
+
+          menu.addEventListener("click", function (event) {
+            if (event.target.classList.contains("nav-link")) {
+              menu.classList.remove("nav-open");
+              toggle.setAttribute("aria-expanded", "false");
+            }
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

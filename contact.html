@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact – Vocabu</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <button
+          class="logo logo-toggle"
+          id="menu-toggle"
+          aria-expanded="false"
+          aria-controls="main-menu"
+          type="button"
+        >
+          <img
+            src="assets/images/App_Icon.png"
+            alt="Open navigation"
+            class="logo-image"
+          />
+        </button>
+        <nav class="main-nav" id="main-menu" aria-label="Main navigation">
+          <a href="index.html#top" class="nav-link">Download</a>
+          <a href="index.html#what-is-vocabu" class="nav-link"
+            >What is Vocabu</a
+          >
+          <a href="index.html#feedback" class="nav-link">Feedback</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="legal-main">
+      <div class="container legal-container">
+        <h1>We’d love to hear your feedback</h1>
+        <p>Tell us what you think about Vocabu.</p>
+
+        <form class="feedback-form" id="feedback-form">
+          <label for="feedback-name">Name</label>
+          <input
+            type="text"
+            id="feedback-name"
+            name="name"
+            required
+            placeholder="Your name"
+          />
+
+          <label for="feedback-email">Email</label>
+          <input
+            type="email"
+            id="feedback-email"
+            name="email"
+            required
+            placeholder="you@example.com"
+          />
+
+          <label for="feedback-message">Your feedback</label>
+          <textarea
+            id="feedback-message"
+            name="message"
+            rows="4"
+            required
+            placeholder="Type your thoughts here..."
+          ></textarea>
+
+          <p class="feedback-privacy-hint" data-lang="de">
+            „Mit dem Absenden Ihrer Nachricht erklären Sie sich damit
+            einverstanden, dass wir Ihre Angaben zur Bearbeitung Ihres Anliegens
+            und gemäß unserer
+            <a href="datenschutz.html">Datenschutzerklärung</a>
+            verarbeiten.“
+          </p>
+          <p class="feedback-privacy-hint" data-lang="en" style="display: none">
+            “By submitting your message, you agree that we may process your
+            information to handle your request in accordance with our
+            <a href="datenschutz.html#privacy-en">Privacy Policy</a>.”
+          </p>
+
+          <label class="feedback-consent">
+            <input type="checkbox" id="feedback-consent" required />
+            <span data-lang="de">
+              Ich habe die Datenschutzerklärung zur Kenntnis genommen und bin
+              mit der Verarbeitung meiner Angaben einverstanden.
+            </span>
+            <span data-lang="en" style="display: none">
+              I have read the Privacy Policy and agree to the processing of my
+              information.
+            </span>
+          </label>
+
+          <button
+            type="submit"
+            class="store-button store-button-ios feedback-submit"
+          >
+            Send feedback
+          </button>
+        </form>
+
+        <div
+          class="feedback-thankyou"
+          id="feedback-thankyou"
+          style="display: none"
+        >
+          <img
+            src="assets/images/App_Icon.png"
+            alt="Vocabu app icon"
+            class="feedback-thankyou-icon"
+          />
+          <p>Thank you for your feedback!</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p class="footer-copy">
+          &copy; <span id="year"></span> Vocabu. Alle Rechte vorbehalten.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Set current year
+      (function () {
+        var yearSpan = document.getElementById("year");
+        if (yearSpan) {
+          yearSpan.textContent = new Date().getFullYear().toString();
+        }
+      })();
+    </script>
+
+    <script type="module">
+      import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+      const SUPABASE_URL = "https://nwmsmpisqhnyycnhgbmn.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "sb_publishable_erq1pTWRnaanWH2ys-HhxQ_rFQlXYTV";
+
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const form = document.getElementById("feedback-form");
+      const thankyou = document.getElementById("feedback-thankyou");
+
+      if (form && thankyou) {
+        var consent = document.getElementById("feedback-consent");
+        var submitBtn = form.querySelector('button[type="submit"]');
+
+        function getLang() {
+          var params = new URLSearchParams(window.location.search);
+          var qsLang = params.get("lang");
+          if (qsLang === "en" || qsLang === "de") return qsLang;
+
+          var docLang = (
+            document.documentElement.getAttribute("lang") || ""
+          ).toLowerCase();
+          if (docLang.startsWith("en")) return "en";
+          return "de";
+        }
+
+        function applyLang(lang) {
+          var nodes = document.querySelectorAll("[data-lang]");
+          nodes.forEach(function (el) {
+            var elLang = el.getAttribute("data-lang");
+            if (elLang === lang) {
+              el.style.display = "";
+            } else {
+              el.style.display = "none";
+            }
+          });
+        }
+
+        function syncConsentState() {
+          if (!consent || !submitBtn) return;
+          submitBtn.disabled = !consent.checked;
+        }
+
+        applyLang(getLang());
+        syncConsentState();
+
+        if (consent) {
+          consent.addEventListener("change", syncConsentState);
+        }
+
+        form.addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          if (consent && !consent.checked) {
+            var lang = getLang();
+            alert(
+              lang === "en"
+                ? "Please confirm that you have read the Privacy Policy before submitting."
+                : "Bitte bestätige vor dem Absenden, dass du die Datenschutzerklärung gelesen hast.",
+            );
+            return;
+          }
+
+          const emailInput = document.getElementById("feedback-email");
+          const messageInput = document.getElementById("feedback-message");
+
+          const email =
+            emailInput && "value" in emailInput ? emailInput.value.trim() : "";
+          const message =
+            messageInput && "value" in messageInput
+              ? messageInput.value.trim()
+              : "";
+
+          if (!message) {
+            alert("Please write a short message before sending.");
+            return;
+          }
+
+          const payload = {
+            email: email || null,
+            message,
+            user_agent: navigator.userAgent || null,
+            source: "landing_page",
+          };
+
+          try {
+            const { error } = await supabase.from("feedback").insert(payload);
+
+            if (error) {
+              console.error("Error inserting feedback:", error.message);
+              alert(
+                "Something went wrong while sending your feedback. Please try again later.",
+              );
+              return;
+            }
+
+            try {
+              await fetch(
+                "https://nwmsmpisqhnyycnhgbmn.supabase.co/functions/v1/feedback-email",
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(payload),
+                },
+              );
+            } catch (fnErr) {
+              console.error("Error calling feedback-email function:", fnErr);
+            }
+
+            form.style.display = "none";
+            thankyou.style.display = "flex";
+          } catch (e) {
+            console.error("Unexpected error submitting feedback:", e);
+            alert(
+              "Something went wrong while sending your feedback. Please try again later.",
+            );
+          }
+        });
+      }
+    </script>
+
+    <script>
+      // Mobile nav toggle (no-op on desktop)
+      (function () {
+        var toggle = document.getElementById("menu-toggle");
+        var menu = document.getElementById("main-menu");
+
+        if (toggle && menu) {
+          toggle.addEventListener("click", function () {
+            var isOpen = menu.classList.toggle("nav-open");
+            toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+          });
+
+          menu.addEventListener("click", function (event) {
+            if (event.target.classList.contains("nav-link")) {
+              menu.classList.remove("nav-open");
+              toggle.setAttribute("aria-expanded", "false");
+            }
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
