@@ -9,18 +9,26 @@
   <body>
     <header class="site-header">
       <div class="container header-inner">
+        <a href="index.html#top" class="logo">
+          <img
+            src="assets/images/App_Icon.png"
+            alt="Vocabu home"
+            class="logo-image"
+          />
+        </a>
+
         <button
-          class="logo logo-toggle"
+          class="menu-toggle"
           id="menu-toggle"
           aria-expanded="false"
           aria-controls="main-menu"
+          aria-label="Toggle navigation"
           type="button"
         >
-          <img
-            src="assets/images/App_Icon.png"
-            alt="Open navigation"
-            class="logo-image"
-          />
+          <span class="menu-bar"></span>
+          <span class="menu-bar"></span>
+          <span class="menu-bar"></span>
+          <span class="sr-only">Toggle navigation</span>
         </button>
         <nav class="main-nav" id="main-menu" aria-label="Main navigation">
           <a href="index.html#top" class="nav-link">Download</a>
@@ -78,18 +86,6 @@
             <a href="datenschutz.html#privacy-en">Privacy Policy</a>.”
           </p>
 
-          <label class="feedback-consent">
-            <input type="checkbox" id="feedback-consent" required />
-            <span data-lang="de">
-              Ich habe die Datenschutzerklärung zur Kenntnis genommen und bin
-              mit der Verarbeitung meiner Angaben einverstanden.
-            </span>
-            <span data-lang="en" style="display: none">
-              I have read the Privacy Policy and agree to the processing of my
-              information.
-            </span>
-          </label>
-
           <button
             type="submit"
             class="store-button store-button-ios feedback-submit"
@@ -118,6 +114,11 @@
         <p class="footer-copy">
           &copy; <span id="year"></span> Vocabu. Alle Rechte vorbehalten.
         </p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="impressum.html">Impressum</a>
+          <a href="datenschutz.html">Datenschutz</a>
+          <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a>
+        </nav>
       </div>
     </footer>
 
@@ -144,9 +145,6 @@
       const thankyou = document.getElementById("feedback-thankyou");
 
       if (form && thankyou) {
-        var consent = document.getElementById("feedback-consent");
-        var submitBtn = form.querySelector('button[type="submit"]');
-
         function getLang() {
           var params = new URLSearchParams(window.location.search);
           var qsLang = params.get("lang");
@@ -171,30 +169,10 @@
           });
         }
 
-        function syncConsentState() {
-          if (!consent || !submitBtn) return;
-          submitBtn.disabled = !consent.checked;
-        }
-
         applyLang(getLang());
-        syncConsentState();
-
-        if (consent) {
-          consent.addEventListener("change", syncConsentState);
-        }
 
         form.addEventListener("submit", async function (event) {
           event.preventDefault();
-
-          if (consent && !consent.checked) {
-            var lang = getLang();
-            alert(
-              lang === "en"
-                ? "Please confirm that you have read the Privacy Policy before submitting."
-                : "Bitte bestätige vor dem Absenden, dass du die Datenschutzerklärung gelesen hast.",
-            );
-            return;
-          }
 
           const emailInput = document.getElementById("feedback-email");
           const messageInput = document.getElementById("feedback-message");
@@ -264,12 +242,14 @@
           toggle.addEventListener("click", function () {
             var isOpen = menu.classList.toggle("nav-open");
             toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            toggle.classList.toggle("is-open", isOpen);
           });
 
           menu.addEventListener("click", function (event) {
             if (event.target.classList.contains("nav-link")) {
               menu.classList.remove("nav-open");
               toggle.setAttribute("aria-expanded", "false");
+              toggle.classList.remove("is-open");
             }
           });
         }

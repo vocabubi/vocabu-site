@@ -16,6 +16,19 @@
             class="logo-image"
           />
         </a>
+        <button
+          class="menu-toggle"
+          id="menu-toggle"
+          aria-expanded="false"
+          aria-controls="main-menu"
+          type="button"
+          aria-label="Toggle navigation"
+        >
+          <span class="menu-bar"></span>
+          <span class="menu-bar"></span>
+          <span class="menu-bar"></span>
+          <span class="sr-only">Toggle navigation</span>
+        </button>
         <nav class="main-nav" id="main-menu" aria-label="Main navigation">
           <a href="index.html#top" class="nav-link">Download</a>
           <a href="index.html#what-is-vocabu" class="nav-link"
@@ -1065,12 +1078,14 @@
           toggle.addEventListener("click", function () {
             var isOpen = menu.classList.toggle("nav-open");
             toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            toggle.classList.toggle("is-open", isOpen);
           });
 
           menu.addEventListener("click", function (event) {
             if (event.target.classList.contains("nav-link")) {
               menu.classList.remove("nav-open");
               toggle.setAttribute("aria-expanded", "false");
+              toggle.classList.remove("is-open");
             }
           });
         }
