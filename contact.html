@@ -207,17 +207,37 @@
               return;
             }
 
+            const functionUrl =
+              "https://nwmsmpisqhnyycnhgbmn.supabase.co/functions/v1/feedback-email";
+
             try {
-              await fetch(
-                "https://nwmsmpisqhnyycnhgbmn.supabase.co/functions/v1/feedback-email",
-                {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(payload),
+              fetch(functionUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+                  apikey: SUPABASE_ANON_KEY,
                 },
-              );
-            } catch (fnErr) {
-              console.error("Error calling feedback-email function:", fnErr);
+                body: JSON.stringify(payload),
+              })
+                .then(async (fnResponse) => {
+                  if (!fnResponse.ok) {
+                    const errorText = await fnResponse.text().catch(() => "");
+                    console.error(
+                      "feedback-email function failed:",
+                      fnResponse.status,
+                      errorText,
+                    );
+                  }
+                })
+                .catch((fnErr) => {
+                  console.error(
+                    "Network error calling feedback-email function:",
+                    fnErr,
+                  );
+                });
+            } catch (e) {
+              console.error("Unexpected error scheduling feedback-email:", e);
             }
 
             form.style.display = "none";

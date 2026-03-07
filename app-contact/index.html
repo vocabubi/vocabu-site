@@ -213,9 +213,8 @@
             const functionUrl =
               "https://nwmsmpisqhnyycnhgbmn.supabase.co/functions/v1/feedback-email";
 
-            let fnResponse;
             try {
-              fnResponse = await fetch(functionUrl, {
+              fetch(functionUrl, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -223,31 +222,25 @@
                   apikey: SUPABASE_ANON_KEY,
                 },
                 body: JSON.stringify(payload),
-              });
-            } catch (fnErr) {
-              console.error(
-                "Network error calling feedback-email function:",
-                fnErr,
-              );
-              alert(
-                "We saved your feedback, but we could not send the email notification. Please try again later.",
-              );
-              return;
-            }
-
-            if (!fnResponse.ok) {
-              const errorText = await fnResponse.text().catch(function () {
-                return "";
-              });
-              console.error(
-                "feedback-email function failed:",
-                fnResponse.status,
-                errorText,
-              );
-              alert(
-                "We saved your feedback, but we could not send the email notification. Please try again later.",
-              );
-              return;
+              })
+                .then(async (fnResponse) => {
+                  if (!fnResponse.ok) {
+                    const errorText = await fnResponse.text().catch(() => "");
+                    console.error(
+                      "feedback-email function failed:",
+                      fnResponse.status,
+                      errorText,
+                    );
+                  }
+                })
+                .catch((fnErr) => {
+                  console.error(
+                    "Network error calling feedback-email function:",
+                    fnErr,
+                  );
+                });
+            } catch (e) {
+              console.error("Unexpected error scheduling feedback-email:", e);
             }
 
             form.style.display = "none";
