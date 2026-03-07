@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact – Vocabu</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body class="page-legal">
+    <main class="legal-main">
+      <div class="container legal-container">
+        <div class="legal-section" role="tablist" aria-label="Contact language">
+          <a
+            href="#"
+            id="contact-tab-de"
+            class="nav-link"
+            role="tab"
+            aria-selected="false"
+            aria-controls="contact-de"
+            >DE</a
+          >
+          <a
+            href="#"
+            id="contact-tab-en"
+            class="nav-link"
+            role="tab"
+            aria-selected="true"
+            aria-controls="contact-en"
+            >EN</a
+          >
+        </div>
+
+        <div id="contact-en" role="tabpanel" aria-labelledby="contact-tab-en">
+          <h1>We’d love to hear your feedback</h1>
+          <p>Tell us what you think about Vocabu.</p>
+
+          <form class="feedback-form" id="feedback-form">
+            <label for="feedback-name-en">Name</label>
+            <input
+              type="text"
+              id="feedback-name-en"
+              name="name"
+              required
+              placeholder="Your name"
+            />
+
+            <label for="feedback-email-en">Email</label>
+            <input
+              type="email"
+              id="feedback-email-en"
+              name="email"
+              required
+              placeholder="you@example.com"
+            />
+
+            <label for="feedback-message-en">Your feedback</label>
+            <textarea
+              id="feedback-message-en"
+              name="message"
+              rows="4"
+              required
+              placeholder="Type your thoughts here..."
+            ></textarea>
+
+            <p class="feedback-privacy-hint">
+              “By submitting your message, you agree that we may process your
+              information to handle your request in accordance with our
+              <a href="../datenschutz.html#privacy-en">Privacy Policy</a>.”
+            </p>
+
+            <button
+              type="submit"
+              class="store-button store-button-ios feedback-submit"
+            >
+              Send feedback
+            </button>
+          </form>
+
+          <div
+            class="feedback-thankyou"
+            id="feedback-thankyou"
+            style="display: none"
+          >
+            <img
+              src="../assets/images/App_Icon.png"
+              alt="Vocabu app icon"
+              class="feedback-thankyou-icon"
+            />
+            <p>Thank you for your feedback!</p>
+          </div>
+        </div>
+
+        <div
+          id="contact-de"
+          role="tabpanel"
+          aria-labelledby="contact-tab-de"
+          style="display: none"
+        >
+          <h1>Wir freuen uns über dein Feedback</h1>
+          <p>Erzähl uns, was du über Vocabu denkst.</p>
+
+          <form class="feedback-form" id="feedback-form-de">
+            <label for="feedback-name-de">Name</label>
+            <input
+              type="text"
+              id="feedback-name-de"
+              name="name"
+              required
+              placeholder="Dein Name"
+            />
+
+            <label for="feedback-email-de">E‑Mail</label>
+            <input
+              type="email"
+              id="feedback-email-de"
+              name="email"
+              required
+              placeholder="du@example.com"
+            />
+
+            <label for="feedback-message-de">Dein Feedback</label>
+            <textarea
+              id="feedback-message-de"
+              name="message"
+              rows="4"
+              required
+              placeholder="Schreib uns dein Feedback..."
+            ></textarea>
+
+            <p class="feedback-privacy-hint">
+              „Mit dem Absenden deiner Nachricht erklärst du dich damit
+              einverstanden, dass wir deine Angaben zur Bearbeitung deines
+              Anliegens und gemäß unserer
+              <a href="../datenschutz.html">Datenschutzerklärung</a>
+              verarbeiten.“
+            </p>
+
+            <button
+              type="submit"
+              class="store-button store-button-ios feedback-submit"
+            >
+              Feedback senden
+            </button>
+          </form>
+
+          <div
+            class="feedback-thankyou"
+            id="feedback-thankyou-de"
+            style="display: none"
+          >
+            <img
+              src="../assets/images/App_Icon.png"
+              alt="Vocabu App-Symbol"
+              class="feedback-thankyou-icon"
+            />
+            <p>Danke für dein Feedback!</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script type="module">
+      import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+      const SUPABASE_URL = "https://nwmsmpisqhnyycnhgbmn.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "sb_publishable_erq1pTWRnaanWH2ys-HhxQ_rFQlXYTV";
+
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      function wireForm(options) {
+        const form = document.getElementById(options.formId);
+        const thankyou = document.getElementById(options.thankyouId);
+
+        if (!form || !thankyou) return;
+
+        form.addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const emailInput = document.getElementById(options.emailInputId);
+          const messageInput = document.getElementById(options.messageInputId);
+
+          const email =
+            emailInput && "value" in emailInput ? emailInput.value.trim() : "";
+          const message =
+            messageInput && "value" in messageInput
+              ? messageInput.value.trim()
+              : "";
+
+          if (!message) {
+            alert("Please write a short message before sending.");
+            return;
+          }
+
+          const payload = {
+            email: email || null,
+            message,
+            user_agent: navigator.userAgent || null,
+            source: "app-contact",
+          };
+
+          try {
+            const { error } = await supabase.from("feedback").insert(payload);
+
+            if (error) {
+              console.error("Error inserting feedback:", error.message);
+              alert(
+                "Something went wrong while sending your feedback. Please try again later.",
+              );
+              return;
+            }
+
+            const functionUrl =
+              "https://nwmsmpisqhnyycnhgbmn.supabase.co/functions/v1/feedback-email";
+
+            let fnResponse;
+            try {
+              fnResponse = await fetch(functionUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+                  apikey: SUPABASE_ANON_KEY,
+                },
+                body: JSON.stringify(payload),
+              });
+            } catch (fnErr) {
+              console.error(
+                "Network error calling feedback-email function:",
+                fnErr,
+              );
+              alert(
+                "We saved your feedback, but we could not send the email notification. Please try again later.",
+              );
+              return;
+            }
+
+            if (!fnResponse.ok) {
+              const errorText = await fnResponse.text().catch(function () {
+                return "";
+              });
+              console.error(
+                "feedback-email function failed:",
+                fnResponse.status,
+                errorText,
+              );
+              alert(
+                "We saved your feedback, but we could not send the email notification. Please try again later.",
+              );
+              return;
+            }
+
+            form.style.display = "none";
+            thankyou.style.display = "flex";
+          } catch (e) {
+            console.error("Unexpected error submitting feedback:", e);
+            alert(
+              "Something went wrong while sending your feedback. Please try again later.",
+            );
+          }
+        });
+      }
+
+      wireForm({
+        formId: "feedback-form",
+        emailInputId: "feedback-email-en",
+        messageInputId: "feedback-message-en",
+        thankyouId: "feedback-thankyou",
+      });
+
+      wireForm({
+        formId: "feedback-form-de",
+        emailInputId: "feedback-email-de",
+        messageInputId: "feedback-message-de",
+        thankyouId: "feedback-thankyou-de",
+      });
+    </script>
+
+    <script>
+      (function () {
+        function show(lang) {
+          var deTab = document.getElementById("contact-tab-de");
+          var enTab = document.getElementById("contact-tab-en");
+          var dePanel = document.getElementById("contact-de");
+          var enPanel = document.getElementById("contact-en");
+
+          var isDe = lang === "de";
+
+          deTab.setAttribute("aria-selected", isDe ? "true" : "false");
+          enTab.setAttribute("aria-selected", isDe ? "false" : "true");
+          dePanel.style.display = isDe ? "" : "none";
+          enPanel.style.display = isDe ? "none" : "";
+        }
+
+        var deTab = document.getElementById("contact-tab-de");
+        var enTab = document.getElementById("contact-tab-en");
+
+        deTab.addEventListener("click", function (e) {
+          e.preventDefault();
+          show("de");
+          history.replaceState(null, "", "#contact-de");
+        });
+
+        enTab.addEventListener("click", function (e) {
+          e.preventDefault();
+          show("en");
+          history.replaceState(null, "", "#contact-en");
+        });
+
+        var hash = (window.location.hash || "").toLowerCase();
+        if (
+          hash.indexOf("contact-de") !== -1 ||
+          hash === "#de" ||
+          hash.indexOf("#de-") === 0
+        ) {
+          show("de");
+        } else {
+          show("en");
+        }
+      })();
+    </script>
+  </body>
+</html>
