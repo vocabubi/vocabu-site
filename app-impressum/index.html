@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vocabu – Imprint / Impressum</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body class="page-legal">
+    <main class="legal-main">
+      <div class="container legal-container">
+        <div class="legal-section" role="tablist" aria-label="Imprint language">
+          <a
+            href="#"
+            id="imprint-tab-de"
+            class="nav-link"
+            role="tab"
+            aria-selected="false"
+            aria-controls="imprint-de"
+            >DE</a
+          >
+          <a
+            href="#"
+            id="imprint-tab-en"
+            class="nav-link"
+            role="tab"
+            aria-selected="true"
+            aria-controls="imprint-en"
+            >EN</a
+          >
+        </div>
+
+        <div
+          id="imprint-de"
+          role="tabpanel"
+          aria-labelledby="imprint-tab-de"
+          style="display: none"
+        >
+<h1>Impressum</h1>
+
+        <p class="legal-hint"></p>
+
+        <section class="legal-section">
+          <h2>Angaben gemäß &sect; 5 TMG</h2>
+          <p>
+            <strong>Lilla Kato</strong><br />
+            An der Löwenbrücke 11,<br />
+            97070<br />
+            Deutschland
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Kontakt</h2>
+          <p>
+            E-Mail:
+            <a href="mailto:vocabubi@gmail.com">vocabubi@gmail.com</a>
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Verantwortlich für den Inhalt nach &sect; 18 Abs. 2 MStV:</h2>
+          <p>Lilla Kato</p>
+        </section>
+        </div>
+
+        <div id="imprint-en" role="tabpanel" aria-labelledby="imprint-tab-en">
+<h1>Imprint</h1>
+
+        <p class="legal-hint"></p>
+
+        <section class="legal-section">
+          <h2>Information pursuant to Section 5 TMG</h2>
+          <p>
+            <strong>Lilla Kato</strong><br />
+            An der Löwenbrücke 11,<br />
+            97070<br />
+            Germany
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Contact</h2>
+          <p>
+            Email:
+            <a href="mailto:vocabubi@gmail.com">vocabubi@gmail.com</a>
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Responsible for content pursuant to Section 18(2) MStV</h2>
+          <p>Lilla Kato</p>
+        </section>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        function show(lang) {
+          var deTab = document.getElementById('imprint-tab-de');
+          var enTab = document.getElementById('imprint-tab-en');
+          var dePanel = document.getElementById('imprint-de');
+          var enPanel = document.getElementById('imprint-en');
+
+          if (!deTab || !enTab || !dePanel || !enPanel) return;
+
+          var isDe = lang === 'de';
+
+          deTab.setAttribute('aria-selected', isDe ? 'true' : 'false');
+          enTab.setAttribute('aria-selected', isDe ? 'false' : 'true');
+          dePanel.style.display = isDe ? '' : 'none';
+          enPanel.style.display = isDe ? 'none' : '';
+        }
+
+        var deTab = document.getElementById('imprint-tab-de');
+        var enTab = document.getElementById('imprint-tab-en');
+
+        if (!deTab || !enTab) return;
+
+        deTab.addEventListener('click', function (e) {
+          e.preventDefault();
+          show('de');
+          history.replaceState(null, '', '#imprint-de');
+        });
+
+        enTab.addEventListener('click', function (e) {
+          e.preventDefault();
+          show('en');
+          history.replaceState(null, '', '#imprint-en');
+        });
+
+        var hash = (window.location.hash || '').toLowerCase();
+        if (hash.indexOf('imprint-de') !== -1 || hash === '#de' || hash.indexOf('#de-') === 0) {
+          show('de');
+        } else {
+          show('en');
+        }
+      })();
+    </script>
+  </body>
+</html>
