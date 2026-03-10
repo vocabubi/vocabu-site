@@ -12,21 +12,21 @@
         <div class="legal-section" role="tablist" aria-label="Terms language">
           <a
             href="#"
-            id="terms-tab-de"
-            class="nav-link"
-            role="tab"
-            aria-selected="false"
-            aria-controls="terms-de"
-            >DE</a
-          >
-          <a
-            href="#"
             id="terms-tab-en"
             class="nav-link"
             role="tab"
             aria-selected="true"
             aria-controls="terms-en"
             >EN</a
+          >
+          <a
+            href="#"
+            id="terms-tab-de"
+            class="nav-link"
+            role="tab"
+            aria-selected="false"
+            aria-controls="terms-de"
+            >DE</a
           >
         </div>
 
@@ -36,7 +36,7 @@
           aria-labelledby="terms-tab-de"
           style="display: none"
         >
-<h1>Nutzungsbedingungen für Vocabu (Website und App)</h1>
+          <h1>Nutzungsbedingungen für Vocabu (Website und App)</h1>
 
           <p>Stand: 2. Februar 2026</p>
 
@@ -249,7 +249,7 @@
         </div>
 
         <div id="terms-en" role="tabpanel" aria-labelledby="terms-tab-en">
-<h1>Terms of Use for Vocabu (Website and App)</h1>
+          <h1>Terms of Use for Vocabu (Website and App)</h1>
 
           <p>Last updated: 2 February 2026</p>
 
@@ -449,43 +449,47 @@
     <script>
       (function () {
         function show(lang) {
-          var deTab = document.getElementById('terms-tab-de');
-          var enTab = document.getElementById('terms-tab-en');
-          var dePanel = document.getElementById('terms-de');
-          var enPanel = document.getElementById('terms-en');
+          var deTab = document.getElementById("terms-tab-de");
+          var enTab = document.getElementById("terms-tab-en");
+          var dePanel = document.getElementById("terms-de");
+          var enPanel = document.getElementById("terms-en");
 
           if (!deTab || !enTab || !dePanel || !enPanel) return;
 
-          var isDe = lang === 'de';
+          var isDe = lang === "de";
 
-          deTab.setAttribute('aria-selected', isDe ? 'true' : 'false');
-          enTab.setAttribute('aria-selected', isDe ? 'false' : 'true');
-          dePanel.style.display = isDe ? '' : 'none';
-          enPanel.style.display = isDe ? 'none' : '';
+          deTab.setAttribute("aria-selected", isDe ? "true" : "false");
+          enTab.setAttribute("aria-selected", isDe ? "false" : "true");
+          dePanel.style.display = isDe ? "" : "none";
+          enPanel.style.display = isDe ? "none" : "";
         }
 
-        var deTab = document.getElementById('terms-tab-de');
-        var enTab = document.getElementById('terms-tab-en');
+        var deTab = document.getElementById("terms-tab-de");
+        var enTab = document.getElementById("terms-tab-en");
 
         if (!deTab || !enTab) return;
 
-        deTab.addEventListener('click', function (e) {
+        deTab.addEventListener("click", function (e) {
           e.preventDefault();
-          show('de');
-          history.replaceState(null, '', '#terms-de');
+          show("de");
+          history.replaceState(null, "", "#terms-de");
         });
 
-        enTab.addEventListener('click', function (e) {
+        enTab.addEventListener("click", function (e) {
           e.preventDefault();
-          show('en');
-          history.replaceState(null, '', '#terms-en');
+          show("en");
+          history.replaceState(null, "", "#terms-en");
         });
 
-        var hash = (window.location.hash || '').toLowerCase();
-        if (hash.indexOf('terms-de') !== -1 || hash === '#de' || hash.indexOf('#de-') === 0) {
-          show('de');
+        var hash = (window.location.hash || "").toLowerCase();
+        if (
+          hash.indexOf("terms-de") !== -1 ||
+          hash === "#de" ||
+          hash.indexOf("#de-") === 0
+        ) {
+          show("de");
         } else {
-          show('en');
+          show("en");
         }
       })();
     </script>
